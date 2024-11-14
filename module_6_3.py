@@ -5,8 +5,8 @@ class Animal:
     sound = None
     _DEGREE_OF_DANGER = 0
 
-    def __init__(self, x, y, z, speed):
-        self._cords = [x, y, z]
+    def __init__(self, speed):
+        self._cords = [0, 0, 0]
         self.speed = speed
 
     def move(self, dx, dy, dz):
@@ -16,10 +16,13 @@ class Animal:
 
         if new_z < 0:
             print("It's too deep, I can't dive :(")
-            return
+        else:
+            self._cords[0] = new_x
+            self._cords[1] = new_y
+            self._cords[2] = new_z
 
     def get_cords(self):
-        print(f'X: {self.x}, Y: {self.y}, Z: {self.z}')
+        print(f'X: {self._cords[0]}, Y: {self._cords[1]}, Z: {self._cords[2]}')
 
     def attack(self):
         if self._DEGREE_OF_DANGER < 5:
@@ -40,7 +43,7 @@ class AquaticAnimal(Animal):
     _DEGREE_OF_DANGER = 3
 
     def dive_in(self, dz):
-        self._cords[2] = abs(dz) * self.speed / 2
+        self._cords[2] = abs(self._cords[2] - dz)
         return
 
 
@@ -49,9 +52,12 @@ class PoisonousAnimal(Animal):
 
 
 class Duckbill(Bird, AquaticAnimal, PoisonousAnimal):
-    def __init__(self):
-        self.speak = 'Click-click-click'
+    def __init__(self, speed, sound='Click-click-click'):
+        super().__init__(speed)
+        self.sound = sound
 
+    def speak(self):
+        print(self.sound)
 
 
 db = Duckbill(10)
