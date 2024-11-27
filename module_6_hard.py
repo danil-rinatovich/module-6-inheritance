@@ -3,9 +3,9 @@ import math
 class Figure:
     sides_count = 0
 
-    def __init__(self, sides, color, filled=False):
-        self.__sides = sides
+    def __init__(self, color: tuple[int, int, int], *sides, filled=False):
         self.__color = color
+        self.__sides = sides
         self.filled = filled
 
     def get_color(self):
@@ -17,12 +17,12 @@ class Figure:
                 and isinstance(b, int) and 0 <= b <= 255)
 
     def set_color(self, r, g, b):
-        if not self.__is_valid_color(r, g, b):
+        if self.__is_valid_color(r, g, b):
             self.__color = [r, g, b]
 
     def __is_valid_sides(self, *sides):
-        for side in self.sides:
-            if len(self.sides) == self.sides_count and side > 0 and type(side) == int:
+        for side in sides:
+            if len(sides) == self.sides_count and side > 0 and type(side) == int:
                 return True
             else:
                 return False
@@ -34,41 +34,41 @@ class Figure:
         return sum(self.__sides)
 
     def set_sides(self, *new_sides):
-        if self.sides_count == len(new_sides):
-            self.sides_count = len(new_sides)
+        if self.__is_valid_sides(*new_sides):
+            self.__sides = list(new_sides)
 
 
 class Circle(Figure):
     sides_count = 1
 
-    def __init__(self, sides, color):
-        super().__init__(sides, color)
+    def __init__(self, color: tuple[int, int, int], *sides):
+        super().__init__(color, *sides)
         self.__radius = self.get_sides()[0] / (2 * math.pi)
 
     def get_square(self):
         return math.pi * (self.__radius ** 2)
 
 
+class Cube(Figure):
+    sides_count = 12
+
+    def __init__(self, color: tuple[int, int, int], *sides):
+        cube_sides = [sides] * self.sides_count
+        super().__init__(color, *cube_sides)
+
+    def get_volume(self):
+        return self.get_sides()[0] ** 3
+
+
 class Triangle(Figure):
     sides_count = 3
-    def __init__(self, sides, color):
-        super().__init__(sides, color)
+    def __init__(self, color: tuple[int, int, int], *sides):
+        super().__init__(color, *sides)
 
     def get_square(self):
         a, b, c = self.get_sides()
         s = sum(self.get_sides()) / 2
         return math.sqrt(s * (s - a) * (s - b) * (s - c))
-
-
-class Cube(Figure):
-    sides_count = 12
-
-    def __init__(self, sides, color):
-        sides = [sides] * 12
-        super().__init__(sides, color)
-
-    def get_volume(self):
-        return self.sides_count ** 3
 
 
 circle1 = Circle((200, 200, 100), 10)  # (Цвет, стороны)
