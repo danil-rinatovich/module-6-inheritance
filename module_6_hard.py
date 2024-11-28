@@ -9,7 +9,7 @@ class Figure:
         self.filled = filled
 
     def get_color(self):
-        return self.__color
+        return list(self.__color)
 
     def __is_valid_color(self, r, g, b):
         return (isinstance(r, int) and 0 <= r <= 255
@@ -28,7 +28,7 @@ class Figure:
                 return False
 
     def get_sides(self):
-        return self.__sides
+        return list(self.__sides)
 
     def __len__(self):
         return sum(self.__sides)
@@ -49,17 +49,6 @@ class Circle(Figure):
         return math.pi * (self.__radius ** 2)
 
 
-class Cube(Figure):
-    sides_count = 12
-
-    def __init__(self, color: tuple[int, int, int], *sides):
-        cube_sides = [sides] * self.sides_count
-        super().__init__(color, *cube_sides)
-
-    def get_volume(self):
-        return self.get_sides()[0] ** 3
-
-
 class Triangle(Figure):
     sides_count = 3
     def __init__(self, color: tuple[int, int, int], *sides):
@@ -69,6 +58,16 @@ class Triangle(Figure):
         a, b, c = self.get_sides()
         s = sum(self.get_sides()) / 2
         return math.sqrt(s * (s - a) * (s - b) * (s - c))
+
+class Cube(Figure):
+    sides_count = 12
+
+    def __init__(self, color: tuple[int, int, int], side, filled=False):
+        cube_sides = [side] * 12
+        super().__init__(color, *cube_sides, filled=filled)
+
+    def get_volume(self):
+        return self.get_sides()[0] ** 3
 
 
 circle1 = Circle((200, 200, 100), 10)  # (Цвет, стороны)
